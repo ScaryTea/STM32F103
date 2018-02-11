@@ -3,7 +3,7 @@
 int main(void) {
 	// enable tacting
 	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
-	//configuring portmode
+	//configuring portmodes
 	GPIOA->CRL &= ~GPIO_CRL_MODE6;
 	GPIOA->CRL = (GPIOA->CRL|GPIO_CRL_MODE5_1)&(~GPIO_CRL_MODE5_0);
 	GPIOA->CRL &= ~GPIO_CRL_CNF5;
@@ -16,7 +16,7 @@ int main(void) {
 		else {
 			GPIOA->ODR |= GPIO_ODR_ODR5;
 		}
-		for (volatile int i = 0; i < 1000; i++);
+		for (volatile int i = 0; i < 4000; i++);
 	}
 	return 0;
 }
