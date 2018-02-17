@@ -20,16 +20,11 @@ int main() {
 	EXTI->FTSR |= EXTI_FTSR_TR6;
 
 	NVIC_EnableIRQ(EXTI9_5_IRQn);
-	/*
-	uart_init();
-	char * s = "Hello";
-	uart_send(s); */
 
 // Usart starts here
+
 	GPIOA->CRL = (GPIOA->CRL|GPIO_CRL_CNF2_1)&(~GPIO_CRL_CNF2_0);
         GPIOA->CRL = (GPIOA->CRL|GPIO_CRL_MODE2_1)&(~GPIO_CRL_MODE2_0);
-
-	//USART->CR1 &= ~USART->CR1_M;
 
 	USART2->BRR = 0x341;
 
@@ -41,11 +36,11 @@ int main() {
 
 	while(!(USART2->SR&USART_SR_TXE));
 
-	 USART2->DR = 'a';
+	USART2->DR = 'a';
 
 // Ends here
 
-	while(1) { for(volatile int i = 0; i < 5000000; i++); }
+	while(1);
 }
 
 void EXTI9_5_IRQHandler(void) {

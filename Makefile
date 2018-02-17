@@ -5,7 +5,8 @@ LINKDIR = linker/
 
 STD ?= c99
 
-FILENAME ?= main
+f ?= main
+FILENAME ?= $(f)
 OBJECTS = $(FILENAME).o startup_stm32f103xb.o system_stm32f1xx.o
 
 COMP = arm-none-eabi-gcc -Wall --std=c99 -g3
@@ -51,4 +52,7 @@ clean:
 
 mkdir:
 	@mkdir -p $(OBJDIR)
+
+uart:
+	sudo socat -,raw,echo=0,escape=0x03 /dev/ttyUSB0,b9600,raw,echo=0
 
