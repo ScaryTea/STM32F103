@@ -1,6 +1,8 @@
 #include "stm32f1xx.h"
+#include "stdbool.h"
 
 char* str;
+static bool is_busy = false;
 
 void uart_init() {
 	//init uart2 
@@ -21,12 +23,16 @@ static void send_byte(char byte) {
 	}
 	else {
 		CLEAR_BIT(USART2->CR1, USART_CR1_TXEIE);
+		is_busy = false;
 	}
 }
 
-void uart_send(char* s) {
+bool uart_send(char* s) {
+	if(is_busy) return false;
+	is_busy = true;
 	str = s;
 	send_byte(*s);
+	return true;
 }
 
 void USART2_IRQHandler(void) {
