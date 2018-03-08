@@ -21,25 +21,6 @@ int main() {
 
 	NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-// Usart starts here
-
-	GPIOA->CRL = (GPIOA->CRL|GPIO_CRL_CNF2_1)&(~GPIO_CRL_CNF2_0);
-        GPIOA->CRL = (GPIOA->CRL|GPIO_CRL_MODE2_1)&(~GPIO_CRL_MODE2_0);
-
-	USART2->BRR = 0x341;
-
-	USART2->CR1 |= USART_CR1_UE;
-
-	USART2->CR1 |= USART_CR1_TE;
-
-	USART2->DR = 't';
-
-	while(!(USART2->SR&USART_SR_TXE));
-
-	USART2->DR = 'a';
-
-// Ends here
-
 	while(1);
 }
 

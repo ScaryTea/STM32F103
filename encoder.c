@@ -1,6 +1,5 @@
 #include "stm32f1xx.h"
 #include "uart.c"
-#include <stdlib.h>
 #include <stdio.h>
 
 int p4 = 0;
@@ -8,7 +7,7 @@ int p6 = 0;
 
 int main() {
 	// enable tacting
-    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+    	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
 	RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
 	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
 
@@ -33,12 +32,12 @@ int main() {
 	SET_BIT(EXTI->IMR, EXTI_IMR_MR0 | EXTI_IMR_MR0);
 
 	// Enabling falling and rising triggering on both pins
-	SET_BIT(EXTI->FTSR, EXTI_FTSR_TR6 | EXTI_FTSR_TR4);
-	SET_BIT(EXTI->RTSR, EXTI_RTSR_TR6 | EXTI_RTSR_TR4);
+	SET_BIT(EXTI->FTSR, EXTI_FTSR_TR6); //| EXTI_FTSR_TR4);
+	//SET_BIT(EXTI->RTSR, EXTI_RTSR_TR6 | EXTI_RTSR_TR4);
 	SET_BIT(EXTI->RTSR, EXTI_RTSR_TR0);
 
 	// Enabling NVIC handlers
-	NVIC_EnableIRQ(EXTI4_IRQn);
+	//NVIC_EnableIRQ(EXTI4_IRQn);
 	NVIC_EnableIRQ(EXTI9_5_IRQn);
 	NVIC_EnableIRQ(EXTI0_IRQn);
 
@@ -55,6 +54,7 @@ void EXTI9_5_IRQHandler(void) {
 	else { 
 		p4 <<= 1;
 	}
+/*
 	if(GPIOA->IDR & GPIO_IDR_IDR6) {
 		p6 <<= 1;
 		p6 |= 1;
@@ -62,7 +62,7 @@ void EXTI9_5_IRQHandler(void) {
 	else { 
 		p6 <<= 1;
 	}
-
+*/
 	EXTI->PR |= EXTI_PR_PR6;
 }
 
@@ -87,9 +87,8 @@ void EXTI4_IRQHandler(void) {
 }
 
 void EXTI0_IRQHandler(void) {
-	char* s2 = (char*)malloc(20);
+	char s2[20];
 	sprintf(s2, "%d", p4);
 	while(!uart_send(s2));
-	free(s2);
 	EXTI->PR |= EXTI_PR_PR0;
 }

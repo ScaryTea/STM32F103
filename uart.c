@@ -1,8 +1,7 @@
-#include "stm32f1xx.h"
-#include "stdbool.h"
+#include "uart.h"
 
 char* str;
-static bool is_busy = false;
+bool is_busy = false;
 
 void uart_init() {
 	//init uart2 
@@ -16,7 +15,7 @@ void uart_init() {
 	NVIC_EnableIRQ(USART2_IRQn);
 }
 
-static void send_byte(char byte) {
+void send_byte(char byte) {
 	if(byte != '\0') {
 		USART2->DR = byte;
 		SET_BIT(USART2->CR1, USART_CR1_TXEIE);
