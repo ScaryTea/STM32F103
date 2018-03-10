@@ -7,8 +7,8 @@ STD ?= c99
 
 f ?= main
 FILENAME ?= $(f)
-OBJECTS = $(FILENAME).o startup_stm32f103xb.o system_stm32f1xx.o $(OBJ)
-OBJ ?= ""
+OBJECTS = $(FILENAME).o startup_stm32f103xb.o system_stm32f1xx.o #$(OBJ)
+#OBJ
 
 COMP = arm-none-eabi-gcc -Wall --std=c99 -g3
 COMP += -mthumb -mcpu=cortex-m3 -ffreestanding
