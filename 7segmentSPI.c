@@ -19,9 +19,20 @@ for shift register(pins Qa(1)-Qh(8))
 short digits[] = { 238, 40, 205, 109, 43, 103, 231, 44, 239, 111, 16 };
 int currDigit = 0;
 
+void send_char(char byte) {
+	// Latch off
+	GPIOA->ODR &= ~GPIO_ODR_ODR3;
+	spi_send(digits[currDigit]);
+	// Latch on
+	GPIOA->ODR |= GPIO_ODR_ODR3;	
+}
+
 int main() {
 	spi_init();
-	spi_send(digits[currDigit]);
+	MODIFY_REG(GPIOA->CRL,
+		GPIO_CRL_CNF3 | GPIO_CRL_MODE3,
+		GPIO_CRL_MODE3_1);
+	
 	SET_BIT(RCC->APB1ENR, RCC_APB1ENR_TIM2EN);
 	TIM2->PSC = 8000;
 	TIM2->ARR = 1000;
@@ -36,7 +47,7 @@ int main() {
 
 // just shows digits from 0 to 9 every second
 void TIM2_IRQHandler(void) {
-	spi_send(digits[currDigit]);
+	send_char(digits[currDigit]);
 	currDigit = currDigit < 9 ? currDigit + 1 : 0;
 	TIM2->SR &= ~TIM_SR_UIF;
 }
