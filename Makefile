@@ -7,8 +7,7 @@ STD ?= c99
 
 f ?= main
 FILENAME ?= $(f)
-OBJECTS = $(FILENAME).o startup_stm32f103xb.o system_stm32f1xx.o #$(OBJ)
-#OBJ
+override OBJECTS += $(FILENAME).o startup_stm32f103xb.o system_stm32f1xx.o 
 
 COMP = arm-none-eabi-gcc -Wall --std=c99 -g3
 COMP += -mthumb -mcpu=cortex-m3 -ffreestanding
@@ -32,18 +31,18 @@ all: clean mkdir $(FILENAME).bin
 
 $(FILENAME).bin: $(FILENAME).elf
 	$(BIN)
-	rm -f $(FILENAME).elf
+	@rm -f $(FILENAME).elf
 
 $(FILENAME).elf: $(OBJECTS)
 	$(ELF)
 
 %.o : %.c
 	$(COMP) $^
-	mv $@ $(OBJDIR)$@
+	@mv $@ $(OBJDIR)$@
 
 %.o : %.s
 	$(COMP) $^
-	mv $@ $(OBJDIR)$@
+	@mv $@ $(OBJDIR)$@
 
 flash:
 	@st-flash write $(FILENAME).bin 0x8000000
