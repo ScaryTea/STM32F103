@@ -18,7 +18,7 @@ void spi_init() {
 	SET_BIT(SPI1->CR1, 0x4 << SPI_CR1_BR_Pos);
 	// enable spi
 	SET_BIT(SPI1->CR1, SPI_CR1_SPE);
-	CLEAR_BIT(SPI1->CR1, SPI_CR1_CPOL | SPI_CR1_CPHA);
+	MODIFY_REG(SPI1->CR1, SPI_CR1_CPHA, SPI_CR1_CPOL);
 }
 
 void disable_spi() {
