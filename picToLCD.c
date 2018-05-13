@@ -23,6 +23,9 @@ int main() {
 	// set peripheral and memory addresses
 	DMA1_Channel5->CPAR = (uintptr_t) &(USART1->DR);
 	DMA1_Channel5->CMAR = (uintptr_t) &(SPI1->DR);
+
+	// Priority - the highest (of course)
+	DMA1_Channel5->CCR |= 3 << DMA_CCR_PL_Pos;
 	
 	// number of bytes to be transfered
 	DMA1_Channel5->CNDTR = 1008;
@@ -35,9 +38,5 @@ int main() {
 	SET_BIT(DMA1_Channel5->CCR, DMA_CCR_EN);
 
 	display_enable();
-	//spi_send(0b11111111);
-
-	//MODIFY_REG(GPIOA->CRL, GPIO_CRL_MODE4|GPIO_CRL_CNF4, GPIO_CRL_MODE4_1);
-	//MODIFY_REG(GPIOA->CRL, GPIO_CRL_MODE0|GPIO_CRL_CNF0, GPIO_CRL_MODE0_1);
 	while(1) {}
 }
