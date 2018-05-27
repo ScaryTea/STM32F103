@@ -14,109 +14,45 @@ convert car.jpg -rotate 90 -resize 84x48 -background white -gravity center -exte
 
 void printBin(unsigned char c);
 
-
-
-
 int main() {
 
-	//printf("Enter picture name or full path:\n");
-	char picture[100] = "car.jpg";
-	//scanf("%99s",picture);
+	printf("Enter picture name or full path:\n");
+	char picture[100];
+	scanf("%99s",picture);
 
 
-
-
-
-
-
-
-	/* wait for rotation value in /dev/ttyUSB0 */
-
-/*
+	
+	
 	int file;
     struct termios options;
-	char port[] = "/dev/ttyUSB0";
 
-	file = open(port, O_RDONLY | O_NOCTTY | O_NDELAY);
+	file = open("/dev/ttyUSB0", O_RDONLY | O_NOCTTY );
 
-	if(file == -1) perror("Unable to open the serial port\n"); 
-    printf("Serial port opened successfully\n");
-
+	if(file == -1){perror("Unable to open the serial port\n");}
+		printf("Serial port open successful\n");
 
 	tcgetattr(file, &options);          
     cfsetispeed(&options, B9600);                   
-    cfsetospeed(&options, B9600); 
-//          
+    cfsetospeed(&options, B9600);                   
     options.c_cflag |= (CLOCAL | CREAD);              
     options.c_cflag |= PARENB;                      //No parity                 
-    options.c_cflag |= PARODD;                      
+    //options.c_cflag |= PARODD;                      
     options.c_cflag &= ~CSTOPB;                     
     options.c_cflag &= ~CSIZE;                      
-    options.c_cflag |= CS8;                         //8 bits                   
-    tcsetattr(file, TCSANOW, &options);          
-    fcntl(file, F_SETFL, FNDELAY);          
-//
-	// Enable the receiver and set local mode...
-	options.c_cflag |= (CLOCAL | CREAD);
-	// Set 8-bit mode
-	options.c_cflag &= ~CSIZE;
-	options.c_cflag |= CS8;	
+    options.c_cflag |= CS8;                         //8 bits  
+	//cfmakeraw(&options);          
+    tcsetattr(file, TCSANOW, &options);
 
-	tcsetattr(file, TCSANOW, &options);       
-    fcntl(file, F_SETFL, FNDELAY); 
-*/
-
-	int file;
-    struct termios SerialPortSettings;
-	char port[] = "/dev/ttyUSB0";
-
-	file = open(port, O_RDONLY | O_NOCTTY);
-
-	if(file == -1) perror("Unable to open the serial port\n"); 
-    printf("Serial port opened successfully\n");
-
-	tcgetattr(file, &SerialPortSettings);	/* Get the current attributes of the Serial port */
-	cfsetispeed(&SerialPortSettings,B9600); /* Set Read  Speed as 9600  */
-	cfsetospeed(&SerialPortSettings,B9600); /* Set Write Speed as 9600  */
-	SerialPortSettings.c_cflag &= ~PARENB;   /* Disables the Parity Enable bit(PARENB),So No Parity   */
-	SerialPortSettings.c_cflag &= ~CSTOPB;   /* CSTOPB = 2 Stop bits,here it is cleared so 1 Stop bit */
-	SerialPortSettings.c_cflag &= ~CSIZE;	 /* Clears the mask for setting the data size             */
-	SerialPortSettings.c_cflag |=  CS8;      /* Set the data bits = 8                                 */
-
-	//SerialPortSettings.c_cflag &= ~CRTSCTS;       /* No Hardware flow Control                         */
-	//SerialPortSettings.c_cflag |= CREAD | CLOCAL; /* Enable receiver,Ignore Modem Control lines       */ 
-
-	//SerialPortSettings.c_iflag &= ~(IXON | IXOFF | IXANY);          /* Disable XON/XOFF flow control both i/p and o/p */
-	//SerialPortSettings.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);  /* Non Cannonical mode  */
-
-	//SerialPortSettings.c_cc[VMIN] = 10; /* Read at least 10 characters */
-	SerialPortSettings.c_cc[VTIME] = 0; /* Wait indefinetly   */
-
-	if((tcsetattr(file,TCSANOW,&SerialPortSettings)) != 0) /* Set the attributes to the termios structure*/
-		printf("\n  ERROR ! in Setting attributes");
-	//fcntl(file, F_SETFL, FNDELAY);
-	tcflush(file, TCIFLUSH);
-
-    printf("Reading serial port ...\n\n");
-	char data[10];
 	int bytes = -1;
-	bytes = read(file,&data,5);
-    if (bytes < 0) {
-        printf("reception error[%d]: %s\n",errno,strerror(errno));
-        return -1;
-    }
+	char data[50];
+	printf("Reading serial port ...\n\n");
+    bytes = read(file, data, 2);
 	printf("Read %d bytes\n",bytes);
+    if (bytes < 0)
+		printf("Read error[%d]: %s\n",errno,strerror(errno));
+	printf("%c",data[0]);
+	printf("\n");
     close(file);
-    printf("Serial port closed\n");
-	printf("Read: [%s]\n",data);
-	int k = 0;
-	while (k++ < bytes)
-		printBin(data[k]);
-
-
-
-
-
 
 
 
