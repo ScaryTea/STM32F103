@@ -3,11 +3,10 @@
 #include <stdint.h>
 #include <string.h>
 
-uint8_t shifts[] = { 1, 1<<1, 1<<2, 1<<3, 1<<4, 1<<5, 1<<6, 1<<7 };
+static uint8_t shifts[] = { 1, 1<<1, 1<<2, 1<<3, 1<<4, 1<<5, 1<<6, 1<<7 };
 
-uint32_t fsize = 0;
-unsigned char* readFile(char* path);
-void printBin(unsigned char c);
+static uint32_t fsize = 0;
+static unsigned char* readFile(char* path);
 
 int main(int argc, char *argv[]) {
 	/* unused info, probably will need this in future
@@ -44,7 +43,7 @@ int main(int argc, char *argv[]) {
 		}
 }
 
-unsigned char* readFile(char* path) {
+static unsigned char* readFile(char* path) {
 	FILE* f = fopen(path, "r");
 	if(f == NULL) 
 	{
@@ -60,23 +59,3 @@ unsigned char* readFile(char* path) {
 	return res;
 }
 
-void printBin(unsigned char c) {
-	int a = (int)c;
-	int b = 2; // base
-	int i = 0;
-	unsigned char rests[10];
-
-	while(a >= b) {
-		rests[i] = (unsigned char)(a % b);
-		a = a / b;
-		i++;
-	}
-	rests[i] = (unsigned char)(a);
-
-	for(int j = 7; j > i; j--) {
-		printf("0");
-	}
-	for(int j = i; j >= 0; j--) {
-		printf("%X",rests[j]);
-	}
-}
