@@ -25,7 +25,6 @@ int main() {
 	scanf("%99s",picture);
 	
 	char* angle = "0";
-	serial_config();
 
 	while(1) {
 		convert_pic(picture, angle);
