@@ -54,5 +54,5 @@ mkdir:
 	@mkdir -p $(OBJDIR)
 
 uart:
-	sudo socat -,raw,echo=0,escape=0x03 /dev/ttyUSB0,b9600,raw,echo=0
+	socat -,raw,echo=0,escape=0x03 /dev/ttyUSB0,b9600,raw,echo=0
 

@@ -28,7 +28,7 @@ int main() {
 	DMA1_Channel5->CCR |= 3 << DMA_CCR_PL_Pos;
 	
 	// number of bytes to be transfered
-	DMA1_Channel5->CNDTR = 1008;
+	DMA1_Channel5->CNDTR = 10080;
 
 	MODIFY_REG(DMA1_Channel5->CCR, 
 		DMA_CCR_PSIZE | DMA_CCR_MSIZE | DMA_CCR_DIR,
