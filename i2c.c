@@ -1,59 +1,18 @@
-#include "stm32f1xx.h"
-#include "uart.h"
-#include "stdio.h"
-
-#define MPU_ADDR 0b1101000
+#include "i2c.h"
 
 void I2C_init();
-void I2C_write_byte(uint32_t address, uint32_t data);
+void I2C_write_byte(uint32_t reg_address, uint32_t data);
 uint8_t I2C_read_byte(uint32_t reg_address);
 void start();
 void send_addr(uint8_t rw);
 void send_data(uint32_t data);
 void stop();
-void ack_config(int on_off);
+void ack_config(unsigned int on_off);
 
-void delay(int millis) {
- for (volatile int i = millis*1000; i > 0; i--);
-}
-
-// /dev/ttyUSB0
-
-int main() {
-	I2C_init();
-	uart1_init();	
-
-	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPAEN);
-	MODIFY_REG(GPIOA->CRL, GPIO_CRL_MODE0 | GPIO_CRL_CNF0, 
-		   GPIO_CRL_MODE0_1);
-	
-	while(1)
-	{
-		unsigned char tab[] = {'|','\0'};
-		delay(1000);
-		
-		I2C_write_byte(0x6B, 0);
-
-		uint8_t resH = I2C_read_byte(0x3B);
-		GPIOA->ODR |= GPIO_ODR_ODR0;
-		char c[16];
-		//sprintf (c, "%u",res);
-		//uart1_send((unsigned char*)c);
-		delay(1000);
-		uint8_t resL = I2C_read_byte(0x3C);
-		GPIOA->ODR ^= GPIO_ODR_ODR0;
-		uint16_t res = (resH<<7)|resL;
-		sprintf (c, "%d",res);
-		uart1_send((unsigned char*)c);
-		delay(50);
-		uart1_send(tab);
-	}
-}
-
-void I2C_write_byte(uint32_t address, uint32_t data) {
+void I2C_write_byte(uint32_t reg_address, uint32_t data) {
 	start();
 	send_addr(0);
-	send_data(address);
+	send_data(reg_address);
 	send_data(data);
 	stop();
 }
@@ -96,7 +55,7 @@ void stop() {
 	while(I2C1->SR1 & I2C_SR2_MSL);
 }
 
-void ack_config(int on_off) {
+void ack_config(unsigned int on_off) {
 	if(on_off)
 		SET_BIT(I2C1->CR1, I2C_CR1_ACK);
 	else

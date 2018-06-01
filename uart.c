@@ -22,6 +22,7 @@ void uart1_init() {
 	USART1->BRR = 0x341;
 	// Update event bit, transmit|recieve enable 
 	SET_BIT(USART1->CR1, USART_CR1_UE | USART_CR1_RE | USART_CR1_TE);
+	NVIC_EnableIRQ(USART1_IRQn);
 }
 
 void uart2_init() {
