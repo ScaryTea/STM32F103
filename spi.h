@@ -2,6 +2,7 @@
 
 extern void spi_send(char byte);
 extern void spi_init();
-extern void disable_spi();
+extern void spi_enable();
+extern void spi_disable();
 
 

@@ -21,7 +21,12 @@ void spi_init() {
 	MODIFY_REG(SPI1->CR1, SPI_CR1_CPHA, SPI_CR1_CPOL);
 }
 
-void disable_spi() {
+void spi_enable() {
+	SET_BIT(SPI1->CR1, SPI_CR1_SPE);
+	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1EN);
+}
+
+void spi_disable() {
 	CLEAR_BIT(SPI1->CR1, SPI_CR1_SPE);
 	CLEAR_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1EN);
 }
