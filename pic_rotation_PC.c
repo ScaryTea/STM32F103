@@ -63,19 +63,6 @@ void kill_old() {
 	fclose(f);
 }
 
-	
-	char* angle = "0";
-
-	while(1) {
-		convert_pic(picture, angle);
-		format_pic();
-		send_pic();
-		angle = wait_angle();
-		printf("Received angle: [%s]\n",angle); /* */
-	}
-	return 0;
-}
-
 char* wait_angle() {
 	int file;
 
