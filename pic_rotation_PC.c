@@ -10,7 +10,6 @@
 #include <sys/types.h>
 #include <signal.h>
 
-
 /*
 convert car.jpg -rotate 90 -resize 84x48 -background white -gravity center -extent 84x48 -colorspace gray -monochrome -depth 1 carsize.bmp
 */
@@ -21,12 +20,10 @@ void serial_config();
 void convert_pic(char* picture, char* angle);
 void format_pic();
 void send_pic();
-
 void send_pic2();
 
 int main() {
 	//kill_old();
-
 	printf("Enter picture name or full path:\n");
 	char picture[100];
 	scanf("%99s",picture);
@@ -64,6 +61,19 @@ void kill_old() {
 	if(fread(&prev_pid, sizeof(int), 1, f))
 		printf("prev_pid: %d, kill result: %d\n",prev_pid,kill(prev_pid, SIGKILL));
 	fclose(f);
+}
+
+	
+	char* angle = "0";
+
+	while(1) {
+		convert_pic(picture, angle);
+		format_pic();
+		send_pic();
+		angle = wait_angle();
+		printf("Received angle: [%s]\n",angle); /* */
+	}
+	return 0;
 }
 
 char* wait_angle() {
@@ -192,5 +202,6 @@ void send_pic2() {
 	//printf("error(%d): %s\n",errno, strerror(errno));
 	fclose(f);
 	close(file);
+	printf("Sent successfully!\n");
 }
 
